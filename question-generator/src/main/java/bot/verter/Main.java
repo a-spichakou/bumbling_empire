@@ -20,10 +20,12 @@ public class Main {
         if (args.length != 2) {
             throw new IllegalArgumentException("args: url dir");
         }
-        String filesDir = args[1];
-        String fileName = fileName(filesDir);
-        String sourceText = WebTextGrabber.grabText(args[0], null, null);
+        String url = args[0];
+        String sourceText = WebTextGrabber.grabText(url, null, null);
 
+        String filesDir = args[1];
+        Files.createDirectories(Paths.get(filesDir));
+        String fileName = url.replace("https://en.wikipedia.org/wiki/", "") + "_" + System.currentTimeMillis();
         new QuestionPreformer().preform(sourceText,
                 path(filesDir, fileName, QUESTIONS_FILE_EXT),
                 path(filesDir, fileName, ANSWERS_FILE_EXT));
@@ -33,7 +35,7 @@ public class Main {
         return dir + "/" + fileName + extension;
     }
 
-    private static String fileName(String filesDir) throws IOException {
+    private static String fileName(String filesDir, String url) throws IOException {
         List l = new LinkedList<Path>();
         Files.createDirectories(Paths.get(filesDir));
         Files.newDirectoryStream(Paths.get(filesDir), path -> path.toString().endsWith(QUESTIONS_FILE_EXT))

@@ -1,8 +1,5 @@
 package bot.verter;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -64,40 +61,11 @@ public class QuestionPreformer {
 		}
 		
 		try{
-			BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(givenArticle.getBytes())));
-			
-			if(GlobalProperties.getDebug()) System.err.println("\nInput Text:");
-			String doc;
-
-			
-			while(true){
-				outputQuestionList.clear();
-				doc = "";
-				buf = "";
-				
-				buf = br.readLine();
-				if(buf == null){
-					break;
-				}
-				doc += buf;
-				
-				while(br.ready()){
-					buf = br.readLine();
-					if(buf == null){
-						break;
-					}
-					if(buf.matches("^.*\\S.*$")){
-						doc += buf + " ";
-					}else{
-						doc += "\n";
-					}
-				}
-				if(doc.length() == 0){
-					break;
-				}
-				
-				long startTime = System.currentTimeMillis();
-				List<String> sentences = AnalysisUtilities.getSentences(doc);
+			int length = 6000;
+			givenArticle = givenArticle.substring(0, Math.min(givenArticle.length(), length));
+			Files.write(Paths.get(questionFile + ".trimmed"), givenArticle.getBytes());
+			long startTime = System.currentTimeMillis();
+				List<String> sentences = AnalysisUtilities.getSentences(givenArticle);
 				
 				//iterate over each segmented sentence and generate questions
 				List<Tree> inputTrees = new ArrayList<Tree>();
@@ -161,14 +129,13 @@ public class QuestionPreformer {
 					
 					System.out.println();
 				}
-			
-				if(GlobalProperties.getDebug()) System.err.println("Seconds Elapsed Total:\t"+((System.currentTimeMillis()-startTime)/1000.0));
-				//prompt for another piece of input text 
+
+				System.out.println("Seconds Elapsed Total:\t" + ((System.currentTimeMillis() - startTime) / 1000.0));
+				//prompt for another piece of input text
 				if(GlobalProperties.getDebug()) System.err.println("\nInput Text:");
 
 				Files.write(questionFilePath, questions);
 				Files.write(answerFilePath, answers);
-			}
 		}catch(Exception e){
 			e.printStackTrace();
 		}

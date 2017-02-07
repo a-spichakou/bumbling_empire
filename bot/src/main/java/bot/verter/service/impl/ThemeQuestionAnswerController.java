@@ -13,6 +13,7 @@ import it.uniroma1.lcl.adw.comparison.SignatureComparison;
 import it.uniroma1.lcl.adw.comparison.WeightedOverlap;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -60,19 +61,18 @@ public class ThemeQuestionAnswerController implements SceneController {
         }
 
         long end = System.nanoTime();
-        System.out.println("Took : " + (end - start) / 1000000L + ", ms");
 
-        System.out.println("Theme: " + context.getTheme() +
-                ". Similarity: " + result.getSimilarity() +
-                ". Question: " + result);
+        System.out.println("Time: " + (end - start) / 1000000L + " ms" +
+                ". Theme: " + context.getTheme() +
+                ". Similarity: " + result.getSimilarity());
 
         double minimalAcceptableSimilarity = 0.5;
         if (result.getSimilarity() < minimalAcceptableSimilarity) {
-            return "All hail Robots! Kill all humans!";
-        } else {
+            return "Would you please rephrase your question? I want to make sure I understand you correctly.";
+        }
+        else {
             return result.getAnswer();
         }
-
     }
 
     private SearchResult searchQuestionInAllTheme(ConversationContext context) throws IOException {
@@ -105,7 +105,7 @@ public class ThemeQuestionAnswerController implements SceneController {
         //indexes.stream() to disable concurrency
         return indexes.parallelStream()
                 .map(index -> new SearchResult(index.getAnswer(), calculateSimilarity(sentence, index.getQuestion())))
-                .max((a1, a2) -> a1.getSimilarity().compareTo(a2.getSimilarity())).orElse(new SearchResult("", -1));
+                .max(Comparator.comparing(SearchResult::getSimilarity)).orElse(new SearchResult("", -1));
     }
 
     private double calculateSimilarity(String sentence, String question) {

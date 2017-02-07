@@ -13,7 +13,7 @@ server.listen(3978, function () {
 });
 
 const extProces = spawn('java', ['-jar','./target/robot.verter-0.0.1-SNAPSHOT-jar-with-dependencies.jar'],
-    {cwd:"e:/Work/Hakat/robot/robot/bot"});
+    {cwd:"c:/work/robot-verter/bot"});
 // Create chat connector for communicating with the Bot Framework Service
 var connector = new builder.ChatConnector({
     appId: "4a07690b-a888-4626-8d62-060687dac3d9",
@@ -28,7 +28,7 @@ extProces.stdout.setEncoding("utf-8");
 extProces.stdout.on('data', function(data) {
     console.log(data.toString('utf8'));
     if (exSession) {
-        exSession.send("Готово: %s", data);
+        exSession.send("%s", data);
     }
 });
 extProces.stderr.on('data', function(data) {
@@ -53,7 +53,11 @@ bot.dialog('/', function (session, args, next) {
     console.log(mes);
     session.sendTyping();
     exSession = session;
-    exSession.send("Ща посмотрю...");
+		
+	var smiles=new Array("(think)","hold on","(waiting)","...","(learn)","let me see","hang on");
+	var item = smiles[Math.floor(Math.random()*smiles.length)];
+	
+    exSession.send(item);
     extProces.stdin.write(mes+"\n","utf-8");
 
 });

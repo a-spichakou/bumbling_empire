@@ -62,9 +62,9 @@ public class ThemeQuestionAnswerController implements SceneController {
 
         long end = System.nanoTime();
 
-        System.out.println("Time: " + (end - start) / 1000000L + " ms" +
+       /* System.out.println("Time: " + (end - start) / 1000000L + " ms" +
                 ". Theme: " + context.getTheme() +
-                ". Similarity: " + result.getSimilarity());
+                ". Similarity: " + result.getSimilarity());*/
 
         double minimalAcceptableSimilarity = 0.5;
         if (result.getSimilarity() < minimalAcceptableSimilarity) {
@@ -119,7 +119,7 @@ public class ThemeQuestionAnswerController implements SceneController {
         //measure for comparing semantic signatures
         SignatureComparison measure = new WeightedOverlap();
 
-        final ADW adw = ServiceFactory.getInstance().getADW();
+        final ADW adw = new ADW();
         return adw.getPairSimilarity(sentence, question,
                 disMethod, measure,
                 srcTextType, trgTextType);

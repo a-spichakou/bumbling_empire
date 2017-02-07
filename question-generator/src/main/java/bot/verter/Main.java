@@ -17,15 +17,33 @@ public class Main {
     //uri https://en.wikipedia.org/wiki/Uberrima_fides
     //dir dir1/dir2
     public static void main(String[] args) throws IOException {
-        if (args.length != 2) {
-            throw new IllegalArgumentException("args: url dir");
+        if (args.length < 2 || args.length > 4) {
+            throw new IllegalArgumentException("args: dir text/url [username] [password]");
         }
-        String url = args[0];
-        String sourceText = WebTextGrabber.grabText(url, null, null);
 
-        String filesDir = args[1];
+        String filesDir = args[0];
         Files.createDirectories(Paths.get(filesDir));
-        String fileName = url.replace("https://en.wikipedia.org/wiki/", "") + "_" + System.currentTimeMillis();
+
+        String url = args[1];
+        String sourceText;
+        String fileName;
+        if (url.startsWith("http")) {
+            String username = null;
+            if (args.length > 2) {
+                username = args[2];
+            }
+            String password = null;
+            if (args.length > 3) {
+                password = args[3];
+            }
+            sourceText = WebTextGrabber.grabText(url, username, password);
+            fileName = url.substring(url.lastIndexOf("/"), url.length()) + "_" + System.currentTimeMillis();
+        } else {
+            sourceText = url;
+            fileName = "source" + "_" + System.currentTimeMillis();
+        }
+
+
         new QuestionPreformer().preform(sourceText,
                 path(filesDir, fileName, QUESTIONS_FILE_EXT),
                 path(filesDir, fileName, ANSWERS_FILE_EXT));
@@ -33,14 +51,6 @@ public class Main {
 
     private static String path(String dir, String fileName, String extension) {
         return dir + "/" + fileName + extension;
-    }
-
-    private static String fileName(String filesDir, String url) throws IOException {
-        List l = new LinkedList<Path>();
-        Files.createDirectories(Paths.get(filesDir));
-        Files.newDirectoryStream(Paths.get(filesDir), path -> path.toString().endsWith(QUESTIONS_FILE_EXT))
-                .forEach(l::add);
-        return String.valueOf(l.size() + 1);
     }
 
 }

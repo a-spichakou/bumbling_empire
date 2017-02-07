@@ -1,5 +1,6 @@
 package bot.verter;
 
+import org.apache.commons.codec.binary.Base64;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -21,8 +22,9 @@ public final class WebTextGrabber {
         assert url != null;
         Connection connection = Jsoup.connect(url);
         if (username != null && password != null) {
-            //noinspection ImplicitArrayToString
-            //connection.header("Authorization", "Basic " + encodeBase64((username + ":" + password).getBytes()));
+            String login = username + ":" + password;
+            String base64login = new String(Base64.encodeBase64(login.getBytes()));
+            connection.header("Authorization", "Basic " + base64login);
         }
         Document doc = get(connection);
         Element contentElement = doc.select("div[id=content]").first();

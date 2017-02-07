@@ -1,138 +1,134 @@
 package bot.verter.model;
 
 public class ConversationContext {
-	
-	private String pierName;
-	
-	private String lastSubject;
-	private String lastObject;
-	private String lastRelation;
-	
-	private Boolean lastIsQuestion = false;
-	
-	private Boolean lastIsNegative = false;
-	
-	private String lastSentiment;
-	
-	private String sentence;
-	
-	public void resetAfterResponce(){
-		lastIsQuestion = null;
-		lastIsNegative = null;
-		lastSubject = null;
-	}
 
-	@Override
-	public String toString() {
-		return "ConversationContext [pierName=" + pierName + ", lastSubject="
-				+ lastSubject + ", lastObject=" + lastObject
-				+ ", lastRelation=" + lastRelation + ", lastIsQuestion="
-				+ lastIsQuestion + ", lastIsNegative=" + lastIsNegative
-				+ ", lastSentiment=" + lastSentiment + ", sentence=" + sentence
-				+ "]";
-	}
+    private String pierName;
 
+    private String lastSubject;
 
+    private String lastObject;
 
-	public String getLastSubject() {
-		return lastSubject;
-	}
+    private String lastRelation;
 
-	public void setLastSubject(String lastSabject) {
-		this.lastSubject = lastSabject;
-	}
+    private Boolean lastIsQuestion = false;
 
-	public boolean isLastIsQuestion() {
-		return lastIsQuestion;
-	}
+    private Boolean lastIsNegative = false;
 
-	public void setLastIsQuestion(boolean lastIsQuestion) {
-		this.lastIsQuestion = lastIsQuestion;
-	}
+    private String lastSentiment;
 
-	public boolean isLastIsNegative() {
-		return lastIsNegative;
-	}
+    private String sentence;
 
-	public void setLastIsNegative(boolean lastIsNegative) {
-		this.lastIsNegative = lastIsNegative;
-	}
+    private String theme;
 
-	public String getPierName() {
-		return pierName;
-	}
+    public void resetAfterResponce() {
+        lastIsQuestion = null;
+        lastIsNegative = null;
+        lastSubject = null;
+    }
 
-	public void setPierName(String pierName) {
-		this.pierName = pierName;
-	}
+    @Override
+    public String toString() {
+        return "ConversationContext [pierName=" + pierName + ", lastSubject="
+                + lastSubject + ", lastObject=" + lastObject
+                + ", lastRelation=" + lastRelation + ", lastIsQuestion="
+                + lastIsQuestion + ", lastIsNegative=" + lastIsNegative
+                + ", lastSentiment=" + lastSentiment + ", sentence=" + sentence
+                + "]";
+    }
 
-	public String getSentiment() {
-		return lastSentiment;
-	}
+    public String getLastSubject() {
+        return lastSubject;
+    }
 
-	public void setSentiment(String sentiment) {
-		this.lastSentiment = sentiment;
-	}
+    public void setLastSubject(String lastSabject) {
+        this.lastSubject = lastSabject;
+    }
 
+    public boolean isLastIsQuestion() {
+        return lastIsQuestion;
+    }
 
-	public String getSentence() {
-		return sentence;
-	}
+    public void setLastIsQuestion(boolean lastIsQuestion) {
+        this.lastIsQuestion = lastIsQuestion;
+    }
 
+    public boolean isLastIsNegative() {
+        return lastIsNegative;
+    }
 
-	public void setSentence(String sentence) {
-		this.sentence = sentence;
-	}
+    public void setLastIsNegative(boolean lastIsNegative) {
+        this.lastIsNegative = lastIsNegative;
+    }
 
-	public String getLastObject() {
-		return lastObject;
-	}
+    public String getPierName() {
+        return pierName;
+    }
 
+    public void setPierName(String pierName) {
+        this.pierName = pierName;
+    }
 
-	public void setLastObject(String lastObject) {
-		this.lastObject = lastObject;
-	}
+    public String getSentiment() {
+        return lastSentiment;
+    }
 
+    public void setSentiment(String sentiment) {
+        this.lastSentiment = sentiment;
+    }
 
-	public String getLastRelation() {
-		return lastRelation;
-	}
+    public String getSentence() {
+        return sentence;
+    }
 
+    public void setSentence(String sentence) {
+        this.sentence = sentence;
+    }
 
-	public void setLastRelation(String lastRelation) {
-		this.lastRelation = lastRelation;
-	}
+    public String getLastObject() {
+        return lastObject;
+    }
 
+    public void setLastObject(String lastObject) {
+        this.lastObject = lastObject;
+    }
 
-	public Boolean getLastIsQuestion() {
-		return lastIsQuestion;
-	}
+    public String getLastRelation() {
+        return lastRelation;
+    }
 
+    public void setLastRelation(String lastRelation) {
+        this.lastRelation = lastRelation;
+    }
 
-	public void setLastIsQuestion(Boolean lastIsQuestion) {
-		this.lastIsQuestion = lastIsQuestion;
-	}
+    public Boolean getLastIsQuestion() {
+        return lastIsQuestion;
+    }
 
+    public void setLastIsQuestion(Boolean lastIsQuestion) {
+        this.lastIsQuestion = lastIsQuestion;
+    }
 
-	public Boolean getLastIsNegative() {
-		return lastIsNegative;
-	}
+    public Boolean getLastIsNegative() {
+        return lastIsNegative;
+    }
 
+    public void setLastIsNegative(Boolean lastIsNegative) {
+        this.lastIsNegative = lastIsNegative;
+    }
 
-	public void setLastIsNegative(Boolean lastIsNegative) {
-		this.lastIsNegative = lastIsNegative;
-	}
+    public String getLastSentiment() {
+        return lastSentiment;
+    }
 
+    public void setLastSentiment(String lastSentiment) {
+        this.lastSentiment = lastSentiment;
+    }
 
-	public String getLastSentiment() {
-		return lastSentiment;
-	}
+    public String getTheme() {
+        return theme;
+    }
 
-
-	public void setLastSentiment(String lastSentiment) {
-		this.lastSentiment = lastSentiment;
-	}
-	
-	
-	
+    public void setTheme(String theme) {
+        this.theme = theme;
+    }
 }

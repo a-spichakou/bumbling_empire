@@ -1,0 +1,41 @@
+# default regexp syntax for excludes
+syntax: regexp
+
+# exclude files under the following directories
+/(\.svn|bin|lib|target|\.settings|\.metadata|\.clover|\.workspace|\.idea)/
+
+# exclude files with the following .extension (note, exluded files still explicitly can be added on exception case)
+\.(bak|log|iws|iml|ipr|orig|diff|bat|iml|classpath|project|launch|springBeans|springWebflow|pmd|checkstyle|jar|zip|gz|gzip)$
+maven-eclipse.xml$
+
+# exclude temp ms office
+~\$*.xls
+~\$*.xlsx
+~\$*.doc
+~\$*.docx
+
+# use global syntax for excludes
+syntax: glob
+
+#exclude jenkins generated files
+hudsonBuild.properties
+
+#exclude intelliJ files
+.idea
+.vagrant
+
+ipb/pf-business-rules
+
+policy/components-preconfig/home/preconfig-home-rating-rules/src/main/java/org/openl/generated
+policy/components-preconfig/home/preconfig-home-rating-rules/src/main/java/com/exigen/ipb/policy/preconfig/rating/home/gen
+policy/components-preconfig/home/preconfig-home-rating-rules/src/main/java/.generated
+policy/components-preconfig/home/preconfig-home-rating-rules/src-generated
+
+platform
+target
+.idea
+
+**/overlays/**
+applications/ipb-deploy/basic.env
+
+UserScripts

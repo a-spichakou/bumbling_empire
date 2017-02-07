@@ -52,11 +52,11 @@ public class ThemeQuestionAnswerController implements SceneController {
         if (context.getTheme() != null) {
             result = find(context.getTheme(), context.getSentence());
             if (result.getSimilarity() < MINIMAL_SIMILARITY_FOR_EXIT_THEME) {
-                result = searchQuestionInAllTheme(context, context.getTheme());
+                result = searchQuestionInAllTheme(context);
             }
         }
         else {
-            result = searchQuestionInAllTheme(context, null);
+            result = searchQuestionInAllTheme(context);
         }
 
         long end = System.nanoTime();
@@ -71,14 +71,11 @@ public class ThemeQuestionAnswerController implements SceneController {
 
     }
 
-    private SearchResult searchQuestionInAllTheme(ConversationContext context, String skip) throws IOException {
+    private SearchResult searchQuestionInAllTheme(ConversationContext context) throws IOException {
         SearchResult result = new SearchResult("", -1);
         Map<String, List<Index>> storage = StorageFactory.getInstance().getStorage();
         String theme = "";
         for (Map.Entry<String, List<Index>> entry : storage.entrySet()) {
-            if (entry.getKey().equals(skip)) {
-                continue;
-            }
             theme = entry.getKey();
             SearchResult temp = find(theme, context.getSentence());
             if (temp.getSimilarity() > SIMILARITY_FACTOR) {

@@ -1,0 +1,11 @@
+{
+  "name": "eis_be_bot",
+  "version": "0.1.0",
+  "scripts": {
+    "start": "node app.js", "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "botbuilder": "^3.6.0",
+    "restify": "^4.2.0"
+  }
+}

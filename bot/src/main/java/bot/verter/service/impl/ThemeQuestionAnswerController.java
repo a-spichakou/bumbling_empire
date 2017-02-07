@@ -24,6 +24,8 @@ public class ThemeQuestionAnswerController implements SceneController {
 
     private static final String ANSWERS_SUFFIX = ".answers";
 
+    private static final double SIMILARITY_FACTOR = 0.9999999;
+
     private static final double MINIMAL_SIMILARITY_FOR_JOIN_THEME = 0.85;
 
     private static final double MINIMAL_SIMILARITY_FOR_EXIT_THEME = 0.75;
@@ -81,6 +83,9 @@ public class ThemeQuestionAnswerController implements SceneController {
                     question = questionCandidate;
                 }
             }
+            if (question.getSimilarity() >= SIMILARITY_FACTOR) {
+                break;
+            }
         }
 
         if (question.getSimilarity() > MINIMAL_SIMILARITY_FOR_JOIN_THEME) {
@@ -104,6 +109,9 @@ public class ThemeQuestionAnswerController implements SceneController {
                     question.setSimilarity(similarity);
                     question.setIndex(idx);
                     question.setText(line);
+                    if (similarity >= SIMILARITY_FACTOR) {
+                        break;
+                    }
                 }
                 idx++;
                 line = br.readLine();

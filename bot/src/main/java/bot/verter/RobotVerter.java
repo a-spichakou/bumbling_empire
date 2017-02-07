@@ -28,7 +28,7 @@ public class RobotVerter {
 
                 final String talkBack = conversationEndpoint.talk(null, conversationSentence);
 
-                System.out.println("Robot Verter: " + talkBack);
+                System.out.println(talkBack);
                 conversationSentence = input.readLine();
             }
         }

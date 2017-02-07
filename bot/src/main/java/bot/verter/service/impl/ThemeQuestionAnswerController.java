@@ -103,7 +103,7 @@ public class ThemeQuestionAnswerController implements SceneController {
         List<Index> indexes = storage.get(theme);
 
         //indexes.stream() to disable concurrency
-        return indexes.parallelStream()
+        return indexes.stream()
                 .map(index -> new SearchResult(index.getAnswer(), calculateSimilarity(sentence, index.getQuestion())))
                 .max(Comparator.comparing(SearchResult::getSimilarity)).orElse(new SearchResult("", -1));
     }

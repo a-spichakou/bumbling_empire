@@ -1,28 +1,22 @@
 package bot.verter.service.impl;
 
 import bot.verter.model.ConversationContext;
-import bot.verter.model.Question;
+import bot.verter.model.SearchResult;
 import bot.verter.service.SceneController;
 import bot.verter.service.factory.ServiceFactory;
+import bot.verter.storage.Index;
+import bot.verter.storage.StorageFactory;
 import it.uniroma1.lcl.adw.ADW;
 import it.uniroma1.lcl.adw.DisambiguationMethod;
 import it.uniroma1.lcl.adw.ItemType;
 import it.uniroma1.lcl.adw.comparison.SignatureComparison;
 import it.uniroma1.lcl.adw.comparison.WeightedOverlap;
-import org.apache.commons.io.FilenameUtils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 public class ThemeQuestionAnswerController implements SceneController {
-
-    private static final String PATH_TO_QA = "d:/hackathon/bot/resources/qa/";
-
-    private static final String QUESTIONS_SUFFIX = ".questions";
-
-    private static final String ANSWERS_SUFFIX = ".answers";
 
     private static final double SIMILARITY_FACTOR = 0.9999999;
 
@@ -51,96 +45,65 @@ public class ThemeQuestionAnswerController implements SceneController {
     }
 
     private String searchAnswer(ConversationContext context) throws IOException {
-        Question question;
+        SearchResult result;
+
+        long start = System.nanoTime();
 
         if (context.getTheme() != null) {
-            question = searchQuestion(context.getTheme(), context.getSentence());
-            if (question.getSimilarity() < MINIMAL_SIMILARITY_FOR_EXIT_THEME) {
-                question = searchQuestionInAllTheme(context);
+            result = find(context.getTheme(), context.getSentence());
+            if (result.getSimilarity() < MINIMAL_SIMILARITY_FOR_EXIT_THEME) {
+                result = searchQuestionInAllTheme(context, context.getTheme());
             }
         }
         else {
-            question = searchQuestionInAllTheme(context);
+            result = searchQuestionInAllTheme(context, null);
         }
 
-        System.out.println("Theme: " + question.getTheme() +
-                ". Similarity: " + question.getSimilarity() +
-                ". Idx: " + question.getIndex() +
-                ". Question: " + question.getText());
+        long end = System.nanoTime();
+        System.out.println("Took : " + (end - start) / 1000000L + ", ms");
 
         double minimalAcceptableSimilarity = 0.4;
-        if (question.getSimilarity() < minimalAcceptableSimilarity) {
+        if (result.getSimilarity() < minimalAcceptableSimilarity) {
             return "All hail Robots! Kill all humans!";
         } else {
-            return readAnswer(question);
+            return result.getAnswer();
         }
 
     }
 
-    private Question searchQuestionInAllTheme(ConversationContext context) throws IOException {
-        Question question = new Question();
-
-        File path = new File(PATH_TO_QA);
-        for (File f : path.listFiles()) {
-            if (f.isFile() && f.getCanonicalPath().endsWith(QUESTIONS_SUFFIX)) {
-                String theme = FilenameUtils.getBaseName(f.getName());
-                Question questionCandidate = searchQuestion(theme, context.getSentence());
-                if (questionCandidate.getSimilarity() > question.getSimilarity()) {
-                    question = questionCandidate;
-                }
+    private SearchResult searchQuestionInAllTheme(ConversationContext context, String skip) throws IOException {
+        SearchResult result = new SearchResult("", -1);
+        Map<String, List<Index>> storage = StorageFactory.getInstance().getStorage();
+        String theme = "";
+        for (Map.Entry<String, List<Index>> entry : storage.entrySet()) {
+            if (entry.getKey().equals(skip)) {
+                continue;
             }
-            if (question.getSimilarity() >= SIMILARITY_FACTOR) {
+            theme = entry.getKey();
+            SearchResult temp = find(theme, context.getSentence());
+            if (temp.getSimilarity() > SIMILARITY_FACTOR) {
+                result = temp;
                 break;
             }
         }
 
-        if (question.getSimilarity() > MINIMAL_SIMILARITY_FOR_JOIN_THEME) {
-            context.setTheme(question.getTheme());
+        if (result.getSimilarity() > MINIMAL_SIMILARITY_FOR_JOIN_THEME) {
+            context.setTheme(theme);
         }
 
-        return question;
+        return result;
     }
 
-    private Question searchQuestion(String theme, String sentence) throws IOException {
-        Question question = new Question();
-        question.setTheme(theme);
+    private SearchResult find(String theme, String sentence) {
+        Map<String, List<Index>> storage = StorageFactory.getInstance().getStorage();
 
-        int idx = 0;
-        try (BufferedReader br = new BufferedReader(new FileReader(PATH_TO_QA + theme + QUESTIONS_SUFFIX))) {
-            String line = br.readLine();
+        List<Index> indexes = storage.get(theme);
 
-            while (line != null) {
-                double similarity = calculateSimilarity(sentence, line);
-                if (similarity > question.getSimilarity()) {
-                    question.setSimilarity(similarity);
-                    question.setIndex(idx);
-                    question.setText(line);
-                    if (similarity >= SIMILARITY_FACTOR) {
-                        break;
-                    }
-                }
-                idx++;
-                line = br.readLine();
-            }
-        }
-        return question;
-    }
-
-    private String readAnswer(Question question) throws IOException {
-        String line;
-        int idx = 0;
-        try (BufferedReader br = new BufferedReader(new FileReader(PATH_TO_QA + question.getTheme() + ANSWERS_SUFFIX))) {
-            line = br.readLine();
-
-            while (line != null) {
-                if (idx == question.getIndex()) {
-                    return line;
-                }
-                idx++;
-                line = br.readLine();
-            }
-        }
-        return null;
+        //indexes.stream() to disable concurrency
+        return indexes.parallelStream()
+                .map(index -> new SearchResult(index.getAnswer(), calculateSimilarity(sentence, index.getQuestion())))
+                .filter(a1 -> a1.getSimilarity() >= SIMILARITY_FACTOR)
+                .max((a1, a2) -> a1.getSimilarity().compareTo(a2.getSimilarity())).orElse(new SearchResult("", -1));
     }
 
     private double calculateSimilarity(String sentence, String question) {

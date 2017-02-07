@@ -62,7 +62,11 @@ public class ThemeQuestionAnswerController implements SceneController {
         long end = System.nanoTime();
         System.out.println("Took : " + (end - start) / 1000000L + ", ms");
 
-        double minimalAcceptableSimilarity = 0.4;
+        System.out.println("Theme: " + context.getTheme() +
+                ". Similarity: " + result.getSimilarity() +
+                ". Question: " + result);
+
+        double minimalAcceptableSimilarity = 0.5;
         if (result.getSimilarity() < minimalAcceptableSimilarity) {
             return "All hail Robots! Kill all humans!";
         } else {
@@ -78,8 +82,10 @@ public class ThemeQuestionAnswerController implements SceneController {
         for (Map.Entry<String, List<Index>> entry : storage.entrySet()) {
             theme = entry.getKey();
             SearchResult temp = find(theme, context.getSentence());
-            if (temp.getSimilarity() > SIMILARITY_FACTOR) {
+            if (temp.getSimilarity() > result.getSimilarity()) {
                 result = temp;
+            }
+            if (result.getSimilarity() > SIMILARITY_FACTOR) {
                 break;
             }
         }
@@ -99,7 +105,6 @@ public class ThemeQuestionAnswerController implements SceneController {
         //indexes.stream() to disable concurrency
         return indexes.parallelStream()
                 .map(index -> new SearchResult(index.getAnswer(), calculateSimilarity(sentence, index.getQuestion())))
-                .filter(a1 -> a1.getSimilarity() >= SIMILARITY_FACTOR)
                 .max((a1, a2) -> a1.getSimilarity().compareTo(a2.getSimilarity())).orElse(new SearchResult("", -1));
     }
 

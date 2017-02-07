@@ -1,0 +1,1 @@
+java -Xmx1200m -cp ./target/question.generator-0.0.1-SNAPSHOT-jar-with-dependencies.jar edu/cmu/ark/QuestionAsker --verbose --model models/linear-regression-ranker-reg500.ser.gz --prefer-wh --max-length 30 --downweight-pro

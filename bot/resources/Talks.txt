@@ -1,0 +1,7 @@
+you: hello
+bot: All hail Robots! Kill all humans! 
+you: I have some questions.
+bot: I am Robot Verter to help you.
+you: I am looking for cheap insurance
+     I am looking for cheap insurance
+	

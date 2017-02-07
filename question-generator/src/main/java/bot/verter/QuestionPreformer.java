@@ -3,9 +3,11 @@ package bot.verter;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import edu.cmu.ark.AnalysisUtilities;
@@ -129,9 +131,11 @@ public class QuestionPreformer {
 					QuestionRanker.adjustScores(outputQuestionList, inputTrees, avoidFreqWords, preferWH, downweightPronouns, doStemming);
 					QuestionRanker.sortQuestions(outputQuestionList, false);
 				}
-				
+
 				//now print the questions
 				//double featureValue;
+				List<String> questions = new LinkedList<>();
+				List<String> answers = new LinkedList<>();
 				for(Question question: outputQuestionList){
 					if(question.getTree().getLeaves().size() > maxLength){
 						continue;
@@ -139,8 +143,14 @@ public class QuestionPreformer {
 					if(justWH && question.getFeatureValue("whQuestion") != 1.0){
 						continue;
 					}
-					System.out.print(question.yield());
-					if(printVerbose) System.out.print("\t"+AnalysisUtilities.getCleanedUpYield(question.getSourceTree()));
+					String questionString = question.yield();
+					questions.add(questionString);
+					System.out.print(questionString);
+					String answerString = AnalysisUtilities.getCleanedUpYield(question.getSourceTree());
+					answers.add(answerString);
+					if(printVerbose) {
+						System.out.print("\t"+ answerString);
+					}
 					Tree ansTree = question.getAnswerPhraseTree();
 					if(printVerbose) System.out.print("\t");
 					if(ansTree != null){
@@ -155,6 +165,9 @@ public class QuestionPreformer {
 				if(GlobalProperties.getDebug()) System.err.println("Seconds Elapsed Total:\t"+((System.currentTimeMillis()-startTime)/1000.0));
 				//prompt for another piece of input text 
 				if(GlobalProperties.getDebug()) System.err.println("\nInput Text:");
+
+				Files.write(questionFilePath, questions);
+				Files.write(answerFilePath, answers);
 			}
 		}catch(Exception e){
 			e.printStackTrace();

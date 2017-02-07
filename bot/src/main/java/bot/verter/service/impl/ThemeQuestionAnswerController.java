@@ -24,7 +24,9 @@ public class ThemeQuestionAnswerController implements SceneController {
 
     private static final String ANSWERS_SUFFIX = ".answers";
 
-    private static final double MINIMAL_SIMILARITY = 0.8;
+    private static final double MINIMAL_SIMILARITY_FOR_JOIN_THEME = 0.85;
+
+    private static final double MINIMAL_SIMILARITY_FOR_EXIT_THEME = 0.75;
 
     @Override
     public boolean enter(ConversationContext context) {
@@ -51,7 +53,7 @@ public class ThemeQuestionAnswerController implements SceneController {
 
         if (context.getTheme() != null) {
             question = searchQuestion(context.getTheme(), context.getSentence());
-            if (question.getSimilarity() < MINIMAL_SIMILARITY) {
+            if (question.getSimilarity() < MINIMAL_SIMILARITY_FOR_EXIT_THEME) {
                 question = searchQuestionInAllTheme(context);
             }
         }
@@ -81,7 +83,7 @@ public class ThemeQuestionAnswerController implements SceneController {
             }
         }
 
-        if (question.getSimilarity() > MINIMAL_SIMILARITY) {
+        if (question.getSimilarity() > MINIMAL_SIMILARITY_FOR_JOIN_THEME) {
             context.setTheme(question.getTheme());
         }
 

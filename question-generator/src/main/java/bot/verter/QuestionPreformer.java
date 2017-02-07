@@ -61,8 +61,10 @@ public class QuestionPreformer {
 		}
 		
 		try{
-			int length = 6000;
-			givenArticle = givenArticle.substring(0, Math.min(givenArticle.length(), length));
+			int length = -1;
+			if (length > 0) {
+				givenArticle = givenArticle.substring(0, Math.min(givenArticle.length(), length));
+			}
 			Files.write(Paths.get(questionFile + ".trimmed"), givenArticle.getBytes());
 			long startTime = System.currentTimeMillis();
 				List<String> sentences = AnalysisUtilities.getSentences(givenArticle);

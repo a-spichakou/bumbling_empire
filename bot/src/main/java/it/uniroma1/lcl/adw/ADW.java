@@ -28,7 +28,7 @@ public class ADW
 	 * 
 	 * @return an instance of {@link ADW}
 	 */
-	public static ADW getInstance()
+	public synchronized static ADW getInstance()
 	{
 		try
 		{

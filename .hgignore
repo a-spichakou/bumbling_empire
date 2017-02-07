@@ -2,10 +2,10 @@
 syntax: regexp
 
 # exclude files under the following directories
-/(\.svn|bin|lib|target|\.settings|\.metadata|\.clover|\.workspace|\.idea)/
+/(\.svn|bin|target|\.settings|\.metadata|\.clover|\.workspace|\.idea)/
 
 # exclude files with the following .extension (note, exluded files still explicitly can be added on exception case)
-\.(bak|log|iws|iml|ipr|orig|diff|bat|iml|classpath|project|launch|springBeans|springWebflow|pmd|checkstyle|jar|zip|gz|gzip)$
+\.(bak|log|iws|iml|ipr|orig|diff|bat|iml|classpath|project|launch|springBeans|springWebflow|pmd|checkstyle|zip|gz|gzip)$
 maven-eclipse.xml$
 
 # exclude temp ms office

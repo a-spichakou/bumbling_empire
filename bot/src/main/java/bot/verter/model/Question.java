@@ -10,6 +10,11 @@ public class Question {
 
     private double similarity;
 
+    public Question() {
+        this.index = -1;
+        this.similarity = -1.0;
+    }
+
     public String getTheme() {
         return theme;
     }

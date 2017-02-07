@@ -15,7 +15,7 @@ public class ContextSceneDecisionMaker implements SceneDecisionMaker{
 	private List<SceneController> sceneControllers = new ArrayList<SceneController>();
 	
 	public ContextSceneDecisionMaker(){
-		sceneControllers.add(new QuestionAnswerController());
+		sceneControllers.add(new ThemeQuestionAnswerController());
 	}
 	
 	@Override

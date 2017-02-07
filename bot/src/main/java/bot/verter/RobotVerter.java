@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 
 import bot.verter.service.ConversationEndpoint;
 import bot.verter.service.factory.ServiceFactory;
+import bot.verter.storage.StorageFactory;
 
 public class RobotVerter {
 	
@@ -15,6 +16,7 @@ public class RobotVerter {
 		
 		final ServiceFactory serviceFactory = new ServiceFactory();
 		final ConversationEndpoint conversationEndpoint = serviceFactory.getConversationEndpoint();
+		StorageFactory.getInstance().init();//initialize storage
 		
 		String conversationSentence = input.readLine();
 

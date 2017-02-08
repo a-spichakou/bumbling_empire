@@ -13,6 +13,7 @@ import it.uniroma1.lcl.adw.comparison.SignatureComparison;
 import it.uniroma1.lcl.adw.comparison.WeightedOverlap;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -98,9 +99,8 @@ public class ThemeQuestionAnswerController implements SceneController {
     }
 
     private SearchResult find(String theme, String sentence) {
-        Map<String, List<Index>> storage = StorageFactory.getInstance().getStorage();
 
-        List<Index> indexes = storage.get(theme);
+        List<Index> indexes = StorageFactory.getInstance().retrieveIndexInTheme(theme);
 
         //indexes.stream() to disable concurrency
         return indexes.stream()

@@ -8,10 +8,20 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 
 public class StorageFactory {
     private static final String PATH_TO_QA = "resources/qa/";
@@ -23,7 +33,9 @@ public class StorageFactory {
     /**
      * Key - theme, value - qa
      */
-    Map<String, List<Index>> storage = new HashMap<>();
+    private Map<String, List<Index>> storage = new HashMap<>();
+
+    private WatchKey watchKey;
 
     private StorageFactory() {
     }
@@ -33,6 +45,24 @@ public class StorageFactory {
     }
 
     public void init() throws IOException {
+        index();
+        watchChanges();
+    }
+
+    public void tryReindex() throws IOException {
+        if (!watchKey.pollEvents().isEmpty()) {
+            index();
+        }
+    }
+
+    private void watchChanges() throws IOException {
+        Path path = Paths.get(PATH_TO_QA);
+        WatchService watchService = path.getFileSystem().newWatchService();
+        watchKey = path.register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+    }
+
+    private void index() throws IOException {
+        storage.clear();
         Map<String, String> ans = answers();
         for (File f : filesByExtension("questions")) {
             int index = 0;
@@ -84,5 +114,10 @@ public class StorageFactory {
 
     public Map<String, List<Index>> getStorage() {
         return storage;
+    }
+
+    public List<Index> retrieveIndexInTheme(String theme) {
+        List<Index> index = storage.get(theme);
+        return index != null ? index : Collections.emptyList();
     }
 }

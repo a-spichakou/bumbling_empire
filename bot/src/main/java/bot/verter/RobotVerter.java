@@ -20,12 +20,13 @@ public class RobotVerter {
 
             final ServiceFactory serviceFactory = new ServiceFactory();
             final ConversationEndpoint conversationEndpoint = serviceFactory.getConversationEndpoint();
-            StorageFactory.getInstance().init();//initialize storage
+            StorageFactory storageFactory = StorageFactory.getInstance();
+            storageFactory.init();
 
             String conversationSentence = input.readLine();
 
             while (conversationSentence != null) {
-
+                storageFactory.tryReindex();
                 final String talkBack = conversationEndpoint.talk(null, conversationSentence);
 
                 System.out.println(talkBack);

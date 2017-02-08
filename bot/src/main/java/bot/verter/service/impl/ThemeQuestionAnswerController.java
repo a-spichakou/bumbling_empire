@@ -3,7 +3,6 @@ package bot.verter.service.impl;
 import bot.verter.model.ConversationContext;
 import bot.verter.model.SearchResult;
 import bot.verter.service.SceneController;
-import bot.verter.service.factory.ServiceFactory;
 import bot.verter.storage.Index;
 import bot.verter.storage.StorageFactory;
 import it.uniroma1.lcl.adw.ADW;
@@ -13,7 +12,6 @@ import it.uniroma1.lcl.adw.comparison.SignatureComparison;
 import it.uniroma1.lcl.adw.comparison.WeightedOverlap;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
